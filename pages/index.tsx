@@ -238,7 +238,7 @@ export default function Home() {
               className="flex items-center space-x-6"
             >
               <StatusPanel status={engineStatus} />
-              <PerformanceMonitor metrics={systemMetrics} />
+              <PerformanceMonitor metrics={systemMetrics} />  {/* Force refresh */}
             </motion.div>
           </div>
         </div>
