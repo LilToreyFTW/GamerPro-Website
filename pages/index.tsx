@@ -157,8 +157,8 @@ const gamesData: GameInfo[] = [
     programId: "UGP-ESO-010",
     steamAppId: "306130",
     moduleName: "eso_module",
-    status: "inactive",
-    performance: { cpu: 0, memory: 0, fps: 0 },
+    status: "syncing",
+    performance: { cpu: 32, memory: 704, fps: 95 },
     images: {
       header: "/images/games/elder-scrolls-online-header.jpg",
       capsule: "/images/games/elder-scrolls-online-capsule.jpg",

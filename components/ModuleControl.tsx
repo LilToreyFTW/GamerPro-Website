@@ -93,94 +93,99 @@ export default function ModuleControl({ game, onClose }: ModuleControlProps) {
             <Monitor className="w-5 h-5 text-module-blue" />
             <span>Performance Metrics</span>
           </h3>
-          
-          <div className="grid grid-cols-3 gap-4">
-            <div className="text-center">
-              <div className="flex items-center justify-center space-x-2 mb-2">
-                <Cpu className="w-4 h-4 text-module-blue" />
-                <span className="text-sm text-gamer-gray">CPU</span>
-              </div>
-              <div className="text-2xl font-bold text-module-blue">
-                {game.performance.cpu.toFixed(1)}%
-              </div>
-              <div className="w-full h-2 bg-gamer-accent rounded-full overflow-hidden mt-2">
-                <motion.div
-                  className="h-full bg-module-blue"
-                  initial={{ width: 0 }}
-                  animate={{ width: `${game.performance.cpu}%` }}
-                  transition={{ duration: 0.5 }}
-                />
-              </div>
             </div>
-
-            <div className="text-center">
-              <div className="flex items-center justify-center space-x-2 mb-2">
-                <Monitor className="w-4 h-4 text-module-green" />
-                <span className="text-sm text-gamer-gray">Memory</span>
-              </div>
-              <div className="text-2xl font-bold text-module-green">
-                {formatMemory(game.performance.memory)}
-              </div>
-              <div className="text-xs text-gamer-gray mt-2">
-                {(game.performance.memory / 1024 / 1024 / 1024).toFixed(2)} GB
-              </div>
+            <div className="luxury-metric-value">{module.performance.cpu}%</div>
+            <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
+              <div 
+                className="bg-gradient-to-r from-indigo-500 to-purple-600 h-2 rounded-full"
+                style={{ width: `${module.performance.cpu}%` }}
+              ></div>
             </div>
+          </div>
 
-            <div className="text-center">
-              <div className="flex items-center justify-center space-x-2 mb-2">
-                <Zap className="w-4 h-4 text-module-yellow" />
-                <span className="text-sm text-gamer-gray">FPS</span>
-              </div>
-              <div className="text-2xl font-bold text-module-yellow">
-                {game.performance.fps}
-              </div>
-              <div className="text-xs text-gamer-gray mt-2">
-                {game.performance.fps >= 60 ? 'Smooth' : game.performance.fps >= 30 ? 'Playable' : 'Low'}
-              </div>
+          <div className="luxury-card p-4">
+            <div className="flex items-center space-x-3 mb-2">
+              <Zap className="w-5 h-5 text-green-600" />
+              <span className="luxury-subheading">Memory</span>
+            </div>
+            <div className="luxury-metric-value">{formatMemory(module.performance.memory)}</div>
+            <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
+              <div 
+                className="bg-gradient-to-r from-green-500 to-emerald-600 h-2 rounded-full"
+                style={{ width: `${(module.performance.memory / 2048) * 100}%` }}
+              ></div>
+            </div>
+          </div>
+
+          <div className="luxury-card p-4">
+            <div className="flex items-center space-x-3 mb-2">
+              <Monitor className="w-5 h-5 text-blue-600" />
+              <span className="luxury-subheading">FPS</span>
+            </div>
+            <div className="luxury-metric-value">{module.performance.fps}</div>
+            <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
+              <div 
+                className="bg-gradient-to-r from-blue-500 to-cyan-600 h-2 rounded-full"
+                style={{ width: `${(module.performance.fps / 144) * 100}%` }}
+              ></div>
             </div>
           </div>
         </div>
-      )}
+      </div>
+
+      {/* Module Information */}
+      <div className="mb-8">
+        <h4 className="luxury-heading text-lg mb-4">Module Information</h4>
+        <div className="luxury-grid luxury-grid-2">
+          <div className="luxury-card p-4">
+            <div className="flex items-center space-x-3 mb-2">
+              <Clock className="w-5 h-5 text-purple-600" />
+              <span className="luxury-subheading">Last Update</span>
+            </div>
+            <div className="luxury-text">{formatTime(module.lastUpdate)}</div>
+          </div>
+
+          <div className="luxury-card p-4">
+            <div className="flex items-center space-x-3 mb-2">
+              <Settings className="w-5 h-5 text-orange-600" />
+              <span className="luxury-subheading">Module Type</span>
+            </div>
+            <div className="luxury-text">Game Module</div>
+          </div>
+        </div>
+      </div>
 
       {/* Control Actions */}
-      <div className="grid grid-cols-2 gap-4">
-        <motion.button
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-          className={`py-3 rounded-lg font-bold transition-all duration-300 flex items-center justify-center space-x-2 ${
-            game.status === 'active'
-              ? 'bg-module-red/20 text-module-red border border-module-red/50 hover:bg-module-red/30'
-              : 'bg-module-green/20 text-module-green border border-module-green/50 hover:bg-module-green/30'
+      <div className="flex space-x-4">
+        <button 
+          className={`luxury-button flex-1 ${
+            module.status === 'active' 
+              ? 'bg-gradient-to-r from-red-500 to-red-600' 
+              : 'bg-gradient-to-r from-green-500 to-green-600'
           }`}
         >
-          {game.status === 'active' ? (
+          {module.status === 'active' ? (
             <>
-              <Pause className="w-5 h-5" />
-              <span>STOP MODULE</span>
+              <Pause className="w-4 h-4 mr-2" />
+              Stop Module
             </>
           ) : (
             <>
-              <Play className="w-5 h-5" />
-              <span>START MODULE</span>
+              <Play className="w-4 h-4 mr-2" />
+              Start Module
             </>
           )}
-        </motion.button>
+        </button>
 
-        <motion.button
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-          className="py-3 rounded-lg font-bold bg-module-yellow/20 text-module-yellow border border-module-yellow/50 hover:bg-module-yellow/30 transition-all duration-300 flex items-center justify-center space-x-2"
-        >
-          <RefreshCw className="w-5 h-5" />
-          <span>RELOAD MODULE</span>
-        </motion.button>
+        <button className="luxury-button flex-1">
+          <RefreshCw className="w-4 h-4 mr-2" />
+          Restart Module
+        </button>
 
-        <motion.button
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-          className="py-3 rounded-lg font-bold bg-module-blue/20 text-module-blue border border-module-blue/50 hover:bg-module-blue/30 transition-all duration-300 flex items-center justify-center space-x-2"
-        >
-          <Settings className="w-5 h-5" />
+        <button className="luxury-button flex-1">
+          <Settings className="w-4 h-4 mr-2" />
+          Configure
+        </button>
           <span>CONFIGURE</span>
         </motion.button>
 

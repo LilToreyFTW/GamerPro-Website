@@ -1,144 +1,142 @@
 import { motion } from 'framer-motion'
-import { Monitor, Cpu, Zap, Play, Pause } from 'lucide-react'
+import { Play, Pause, Settings, Activity, Zap, Monitor } from 'lucide-react'
 
-interface GameCardProps {
-  game: {
-    name: string
-    programId: string
-    status: 'active' | 'inactive' | 'loading'
-    performance: {
-      cpu: number
-      memory: number
-      fps: number
-    }
-    images: {
-      header: string
-      logo: string
-    }
+interface GameModule {
+  id: string
+  name: string
+  status: 'active' | 'inactive' | 'syncing'
+  performance: {
+    cpu: number
+    memory: number
+    fps: number
   }
-  onToggle: () => void
-  onSelect: () => void
-  delay: number
+  lastUpdate: string
+  image: string
+  programId: string
 }
 
-export default function GameCard({ game, onToggle, onSelect, delay }: GameCardProps) {
+interface GameCardProps {
+  module: GameModule
+  onSelect: () => void
+}
+
+export function GameCard({ module, onSelect }: GameCardProps) {
   const getStatusColor = () => {
-    switch (game.status) {
-      case 'active': return 'text-module-green'
-      case 'loading': return 'text-module-yellow'
-      case 'inactive': return 'text-module-red'
-      default: return 'text-gamer-gray'
+    switch (module.status) {
+      case 'active':
+        return 'bg-gradient-to-r from-green-500 to-emerald-600'
+      case 'inactive':
+        return 'bg-gradient-to-r from-gray-500 to-slate-600'
+      case 'syncing':
+        return 'bg-gradient-to-r from-yellow-500 to-orange-600'
+      default:
+        return 'bg-gradient-to-r from-gray-500 to-slate-600'
     }
   }
 
-  const getStatusBg = () => {
-    switch (game.status) {
-      case 'active': return 'bg-module-green/20 border-module-green/50'
-      case 'loading': return 'bg-module-yellow/20 border-module-yellow/50'
-      case 'inactive': return 'bg-module-red/20 border-module-red/50'
-      default: return 'bg-gamer-gray/20 border-gamer-gray/50'
+  const getStatusIcon = () => {
+    switch (module.status) {
+      case 'active':
+        return <Play className="w-4 h-4" />
+      case 'inactive':
+        return <Pause className="w-4 h-4" />
+      case 'syncing':
+        return <Activity className="w-4 h-4" />
+      default:
+        return <Pause className="w-4 h-4" />
     }
   }
 
-  const formatMemory = (bytes: number) => {
-    if (bytes === 0) return '0 MB'
-    const mb = bytes / 1024 / 1024
-    return `${mb.toFixed(0)} MB`
+  const formatMemory = (memory: number) => {
+    return memory > 0 ? `${(memory / 1024).toFixed(1)}GB` : '0GB'
   }
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay }}
-      whileHover={{ scale: 1.02 }}
-      className="bg-gamer-accent/30 backdrop-blur-lg rounded-xl overflow-hidden border border-gamer-gray/20 hover:border-gamer-highlight/50 transition-all duration-300 cursor-pointer"
+      className="luxury-game-card cursor-pointer"
       onClick={onSelect}
+      whileHover={{ y: -8, scale: 1.02 }}
+      transition={{ duration: 0.3, ease: "easeOut" }}
     >
-      {/* Game Header Image */}
-      <div className="relative h-32 bg-gradient-to-br from-gamer-primary to-gamer-accent overflow-hidden">
-        <div className="absolute inset-0 bg-black/20" />
-        <img
-          src={game.images.header}
-          alt={game.name}
-          className="w-full h-full object-cover opacity-80"
+      {/* Game Image */}
+      <div className="luxury-game-image">
+        <img 
+          src={module.image} 
+          alt={module.name}
+          className="w-full h-full object-cover"
         />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
         
         {/* Status Badge */}
-        <div className={`absolute top-2 right-2 px-2 py-1 rounded-full text-xs font-bold ${getStatusBg()} ${getStatusColor()} border`}>
-          {game.status.toUpperCase()}
+        <div className="absolute top-4 right-4">
+          <div className={`luxury-status ${module.status}`}>
+            {getStatusIcon()}
+            {module.status}
+          </div>
         </div>
-
-        {/* Game Logo */}
-        <div className="absolute bottom-2 left-2">
-          <img
-            src={game.images.logo}
-            alt={game.name}
-            className="w-12 h-12 object-contain"
-          />
+        
+        {/* Program ID */}
+        <div className="absolute bottom-4 left-4">
+          <div className="bg-black/50 backdrop-blur-sm px-3 py-1 rounded-full">
+            <span className="text-white text-xs font-medium">{module.programId}</span>
+          </div>
         </div>
       </div>
 
-      {/* Game Info */}
-      <div className="p-4">
-        <h3 className="font-bold text-lg mb-1 font-tech">{game.name}</h3>
-        <p className="text-gamer-gray text-xs mb-3">{game.programId}</p>
-
-        {/* Performance Metrics */}
-        {game.status === 'active' && (
-          <div className="space-y-2 mb-4">
-            <div className="flex items-center justify-between text-xs">
-              <div className="flex items-center space-x-1">
-                <Cpu className="w-3 h-3 text-module-blue" />
-                <span>CPU</span>
-              </div>
-              <span className="text-module-blue">{game.performance.cpu.toFixed(1)}%</span>
+      {/* Game Content */}
+      <div className="luxury-game-content">
+        <h3 className="luxury-game-title">{module.name}</h3>
+        <p className="luxury-game-subtitle">Program ID: {module.programId}</p>
+        
+        {/* Performance Stats */}
+        <div className="luxury-game-stats">
+          <div className="luxury-game-stat">
+            <div className="luxury-game-stat-value">
+              <Monitor className="w-4 h-4 inline mr-1" />
+              {module.performance.fps}
             </div>
-            
-            <div className="flex items-center justify-between text-xs">
-              <div className="flex items-center space-x-1">
-                <Monitor className="w-3 h-3 text-module-green" />
-                <span>Memory</span>
-              </div>
-              <span className="text-module-green">{formatMemory(game.performance.memory)}</span>
-            </div>
-            
-            <div className="flex items-center justify-between text-xs">
-              <div className="flex items-center space-x-1">
-                <Zap className="w-3 h-3 text-module-yellow" />
-                <span>FPS</span>
-              </div>
-              <span className="text-module-yellow">{game.performance.fps}</span>
-            </div>
+            <div className="luxury-game-stat-label">FPS</div>
           </div>
-        )}
-
-        {/* Control Button */}
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={(e) => {
-            e.stopPropagation()
-            onToggle()
-          }}
-          className={`w-full py-2 rounded-lg font-bold text-sm transition-all duration-300 flex items-center justify-center space-x-2 ${
-            game.status === 'active'
-              ? 'bg-module-red/20 text-module-red border border-module-red/50 hover:bg-module-red/30'
-              : 'bg-module-green/20 text-module-green border border-module-green/50 hover:bg-module-green/30'
-          }`}
-        >
-          {game.status === 'active' ? (
-            <>
-              <Pause className="w-4 h-4" />
-              <span>STOP MODULE</span>
-            </>
-          ) : (
-            <>
-              <Play className="w-4 h-4" />
-              <span>START MODULE</span>
-            </>
-          )}
-        </motion.button>
+          
+          <div className="luxury-game-stat">
+            <div className="luxury-game-stat-value">
+              <Zap className="w-4 h-4 inline mr-1" />
+              {module.performance.cpu}%
+            </div>
+            <div className="luxury-game-stat-label">CPU</div>
+          </div>
+          
+          <div className="luxury-game-stat">
+            <div className="luxury-game-stat-value">
+              {formatMemory(module.performance.memory)}
+            </div>
+            <div className="luxury-game-stat-label">Memory</div>
+          </div>
+        </div>
+        
+        {/* Action Buttons */}
+        <div className="flex space-x-2">
+          <button 
+            className={`luxury-button flex-1 text-sm py-2 ${module.status === 'active' ? 'opacity-50' : ''}`}
+            onClick={(e) => {
+              e.stopPropagation()
+              // Handle start/stop
+            }}
+          >
+            {module.status === 'active' ? 'Stop' : 'Start'}
+          </button>
+          
+          <button 
+            className="luxury-button flex-1 text-sm py-2"
+            onClick={(e) => {
+              e.stopPropagation()
+              // Handle settings
+            }}
+          >
+            <Settings className="w-4 h-4 inline mr-1" />
+            Config
+          </button>
+        </div>
       </div>
     </motion.div>
   )

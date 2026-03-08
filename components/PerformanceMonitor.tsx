@@ -1,61 +1,86 @@
 import { motion } from 'framer-motion'
-import { Cpu, Zap, Activity } from 'lucide-react'
+import { Cpu, Activity, Zap, TrendingUp } from 'lucide-react'
 
-interface PerformanceMonitorProps {
-  metrics: {
-    totalModules: number
-    activeModules: number
-    systemLoad: number
-  }
-}
-
-export default function PerformanceMonitor({ metrics }: PerformanceMonitorProps) {
-  const getLoadColor = () => {
-    if (metrics.systemLoad < 30) return 'text-module-green'
-    if (metrics.systemLoad < 70) return 'text-module-yellow'
-    return 'text-module-red'
-  }
-
-  const getLoadBg = () => {
-    if (metrics.systemLoad < 30) return 'bg-module-green/20'
-    if (metrics.systemLoad < 70) return 'bg-module-yellow/20'
-    return 'bg-module-red/20'
+export function PerformanceMonitor() {
+  const metrics = {
+    cpu: 35,
+    memory: 65,
+    fps: 120,
+    temperature: 65
   }
 
   return (
-    <div className="bg-gamer-accent/30 backdrop-blur-lg rounded-lg px-4 py-3 border border-gamer-gray/20">
-      <div className="flex items-center space-x-4">
-        {/* CPU Usage */}
+    <motion.div
+      className="luxury-card p-8"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+    >
+      <div className="flex items-center justify-between mb-6">
+        <div>
+          <h3 className="luxury-heading text-2xl mb-2">Performance Monitor</h3>
+          <p className="luxury-subheading">Real-time system metrics</p>
+        </div>
         <div className="flex items-center space-x-2">
-          <Cpu className="w-4 h-4 text-module-blue" />
-          <div className="flex items-center space-x-1">
-            <div className="w-16 h-2 bg-gamer-accent rounded-full overflow-hidden">
-              <motion.div
-                className="h-full bg-module-blue"
-                initial={{ width: 0 }}
-                animate={{ width: `${metrics.systemLoad}%` }}
-                transition={{ duration: 0.5 }}
-              />
-            </div>
-            <span className={`text-xs font-bold ${getLoadColor()}`}>
-              {metrics.systemLoad.toFixed(1)}%
-            </span>
+          <Activity className="w-5 h-5 text-indigo-600" />
+          <span className="luxury-status active">Live</span>
+        </div>
+      </div>
+
+      <div className="luxury-grid luxury-grid-4">
+        <div className="text-center">
+          <div className="luxury-metric-value flex items-center justify-center">
+            <Cpu className="w-6 h-6 mr-2" />
+            {metrics.cpu}%
+          </div>
+          <div className="luxury-metric-label">CPU Usage</div>
+          <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
+            <div 
+              className="bg-gradient-to-r from-indigo-500 to-purple-600 h-2 rounded-full"
+              style={{ width: `${metrics.cpu}%` }}
+            ></div>
           </div>
         </div>
 
-        {/* Module Activity */}
-        <div className="flex items-center space-x-2">
-          <Activity className="w-4 h-4 text-module-green" />
-          <span className="text-xs text-gamer-gray">
-            {metrics.activeModules}/{metrics.totalModules}
-          </span>
+        <div className="text-center">
+          <div className="luxury-metric-value flex items-center justify-center">
+            <Zap className="w-6 h-6 mr-2" />
+            {metrics.memory}%
+          </div>
+          <div className="luxury-metric-label">Memory Usage</div>
+          <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
+            <div 
+              className="bg-gradient-to-r from-green-500 to-emerald-600 h-2 rounded-full"
+              style={{ width: `${metrics.memory}%` }}
+            ></div>
+          </div>
         </div>
 
-        {/* System Status */}
-        <div className={`px-2 py-1 rounded-full text-xs font-bold ${getLoadBg()} ${getLoadColor()}`}>
-          {metrics.systemLoad < 30 ? 'OPTIMAL' : metrics.systemLoad < 70 ? 'MODERATE' : 'HIGH'}
+        <div className="text-center">
+          <div className="luxury-metric-value">{metrics.fps}</div>
+          <div className="luxury-metric-label">FPS</div>
+          <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
+            <div 
+              className="bg-gradient-to-r from-blue-500 to-cyan-600 h-2 rounded-full"
+              style={{ width: `${(metrics.fps / 144) * 100}%` }}
+            ></div>
+          </div>
+        </div>
+
+        <div className="text-center">
+          <div className="luxury-metric-value flex items-center justify-center">
+            <TrendingUp className="w-6 h-6 mr-2" />
+            {metrics.temperature}°C
+          </div>
+          <div className="luxury-metric-label">Temperature</div>
+          <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
+            <div 
+              className="bg-gradient-to-r from-yellow-500 to-orange-600 h-2 rounded-full"
+              style={{ width: `${(metrics.temperature / 100) * 100}%` }}
+            ></div>
+          </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   )
 }
