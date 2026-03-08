@@ -5,8 +5,7 @@ interface ModuleControlProps {
   game: {
     name: string
     programId: string
-    moduleName: string
-    status: 'active' | 'inactive' | 'loading'
+    status: 'active' | 'inactive' | 'syncing'
     performance: {
       cpu: number
       memory: number
@@ -28,19 +27,20 @@ export default function ModuleControl({ game, onClose }: ModuleControlProps) {
   }
 
   const getStatusColor = () => {
-    switch (module.status) {
+    switch (game.status) {
       case 'active': return 'text-module-green'
-      case 'loading': return 'text-module-yellow'
+      case 'syncing': return 'text-module-yellow'
       case 'inactive': return 'text-module-red'
       default: return 'text-gamer-gray'
     }
   }
 
   const getStatusBg = () => {
-    switch (module.status) {
+    switch (game.status) {
       case 'active': return 'bg-module-green/20 border-module-green/50'
-      case 'loading': return 'bg-module-yellow/20 border-module-yellow/50'
+      case 'syncing': return 'bg-module-yellow/20 border-module-yellow/50'
       case 'inactive': return 'bg-module-red/20 border-module-red/50'
+      default: return 'bg-gamer-gray/20 border-gamer-gray/50'
     }
   }
 
@@ -57,19 +57,19 @@ export default function ModuleControl({ game, onClose }: ModuleControlProps) {
           <div className="flex items-center space-x-4">
             <div className="w-16 h-16 rounded-xl overflow-hidden">
               <img 
-                src={module.image} 
-                alt={module.name}
+                src={game.images.logo} 
+                alt={game.name}
                 className="w-full h-full object-cover"
               />
             </div>
             <div>
-              <h3 className="luxury-heading text-2xl">{module.name}</h3>
-              <p className="luxury-subheading">Program ID: {module.programId}</p>
+              <h3 className="luxury-heading text-2xl">{game.name}</h3>
+              <p className="luxury-subheading">{game.programId}</p>
               <div className={`luxury-status ${getStatusColor()} mt-2`}>
-                {module.status === 'active' && <Play className="w-4 h-4" />}
-                {module.status === 'inactive' && <Pause className="w-4 h-4" />}
-                {module.status === 'syncing' && <RefreshCw className="w-4 h-4" />}
-                {module.status}
+                {game.status === 'active' && <Play className="w-4 h-4" />}
+                {game.status === 'inactive' && <Pause className="w-4 h-4" />}
+                {game.status === 'syncing' && <RefreshCw className="w-4 h-4" />}
+                {game.status}
               </div>
             </div>
           </div>
