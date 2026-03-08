@@ -8,9 +8,6 @@ const nextConfig = {
   },
   assetPrefix: undefined,
   basePath: '',
-  experimental: {
-    missingSuspense: false
-  },
   typescript: {
     ignoreBuildErrors: false
   },
