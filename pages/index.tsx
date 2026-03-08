@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Monitor, Cpu, Zap, Shield, Gamepad2, Settings } from 'lucide-react'
-import GameCard from '../components/GameCard'
-import StatusPanel from '../components/StatusPanel'
-import PerformanceMonitor from '../components/PerformanceMonitor'
+import { GameCard } from '../components/GameCard'
+import { StatusPanel } from '../components/StatusPanel'
+import { PerformanceMonitor } from '../components/PerformanceMonitor'
 import ModuleControl from '../components/ModuleControl'
 
 interface GameInfo {
@@ -11,7 +11,7 @@ interface GameInfo {
   programId: string
   steamAppId: string
   moduleName: string
-  status: 'active' | 'inactive' | 'loading'
+  status: 'active' | 'inactive' | 'syncing'
   performance: {
     cpu: number
     memory: number
@@ -295,8 +295,7 @@ export default function Home() {
           {games.map((game, index) => (
             <GameCard
               key={game.programId}
-              game={game}
-              onToggle={() => handleModuleToggle(game.programId)}
+              module={game}
               onSelect={() => setSelectedGame(game)}
               delay={index * 0.1}
             />

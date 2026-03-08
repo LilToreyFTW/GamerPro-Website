@@ -18,6 +18,7 @@ interface GameModule {
 interface GameCardProps {
   module: GameModule
   onSelect: () => void
+  delay?: number
 }
 
 export function GameCard({ module, onSelect }: GameCardProps) {
