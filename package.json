@@ -1,0 +1,40 @@
+{
+  "name": "gamerpro-website",
+  "version": "1.0.0",
+  "description": "Ultimate Gamer Panel - Professional Gaming Control Center",
+  "main": "index.js",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "export": "next export"
+  },
+  "dependencies": {
+    "next": "^14.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "typescript": "^5.0.0",
+    "@types/react": "^18.2.0",
+    "@types/node": "^20.0.0",
+    "tailwindcss": "^3.3.0",
+    "autoprefixer": "^10.4.0",
+    "postcss": "^8.4.0",
+    "lucide-react": "^0.294.0",
+    "framer-motion": "^10.16.0",
+    "axios": "^1.6.0"
+  },
+  "devDependencies": {
+    "@types/react-dom": "^18.2.0",
+    "eslint": "^8.0.0",
+    "eslint-config-next": "^14.0.0"
+  },
+  "keywords": [
+    "gaming",
+    "control-panel",
+    "module-system",
+    "performance",
+    "optimization"
+  ],
+  "author": "Ultimate Gamer Panel",
+  "license": "MIT"
+}
