@@ -1,8 +1,16 @@
 import { motion } from 'framer-motion'
 import { Cpu, Activity, Zap, TrendingUp } from 'lucide-react'
 
-export function PerformanceMonitor() {
-  const metrics = {
+interface PerformanceMonitorProps {
+  metrics?: {
+    totalModules: number
+    activeModules: number
+    systemLoad: number
+  }
+}
+
+export function PerformanceMonitor({ metrics: propMetrics }: PerformanceMonitorProps = {}) {
+  const internalMetrics = {
     cpu: 35,
     memory: 65,
     fps: 120,
