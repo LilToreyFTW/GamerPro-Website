@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { X, Play, Pause, Settings, Monitor, Cpu, Zap, ExternalLink, RefreshCw } from 'lucide-react'
+import { X, Play, Pause, Settings, Monitor, Cpu, Zap, ExternalLink, RefreshCw, Clock } from 'lucide-react'
 
 interface ModuleControlProps {
   game: {
@@ -24,6 +24,12 @@ interface ModuleControlProps {
 export default function ModuleControl({ game, onClose }: ModuleControlProps) {
   const formatMemory = (bytes: number) => {
     if (bytes === 0) return '0 MB'
+    return `${bytes}MB`
+  }
+
+  const formatTime = (timestamp: string) => {
+    const date = new Date(timestamp)
+    return date.toLocaleTimeString()
   }
 
   const getStatusColor = () => {
@@ -85,15 +91,15 @@ export default function ModuleControl({ game, onClose }: ModuleControlProps) {
         {/* Game Image */}
         <div className="relative h-48 rounded-xl overflow-hidden">
           <img 
-            src={module.image} 
-            alt={module.name}
+            src={game.images.header} 
+            alt={game.name}
             className="w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
         </div>
 
         {/* Performance Metrics */}
-        {module.status === 'active' && (
+        {game.status === 'active' && (
           <div>
             <h4 className="luxury-heading text-lg mb-4">Performance Metrics</h4>
             <div className="luxury-grid luxury-grid-3">
@@ -102,11 +108,11 @@ export default function ModuleControl({ game, onClose }: ModuleControlProps) {
                   <Cpu className="w-5 h-5 text-indigo-600" />
                   <span className="luxury-subheading">CPU Usage</span>
                 </div>
-                <div className="luxury-metric-value">{module.performance.cpu}%</div>
+                <div className="luxury-metric-value">{game.performance.cpu}%</div>
                 <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
                   <div 
                     className="bg-gradient-to-r from-indigo-500 to-purple-600 h-2 rounded-full"
-                    style={{ width: `${module.performance.cpu}%` }}
+                    style={{ width: `${game.performance.cpu}%` }}
                   ></div>
                 </div>
               </div>
@@ -116,11 +122,11 @@ export default function ModuleControl({ game, onClose }: ModuleControlProps) {
                   <Zap className="w-5 h-5 text-green-600" />
                   <span className="luxury-subheading">Memory</span>
                 </div>
-                <div className="luxury-metric-value">{formatMemory(module.performance.memory)}</div>
+                <div className="luxury-metric-value">{game.performance.memory}MB</div>
                 <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
                   <div 
                     className="bg-gradient-to-r from-green-500 to-emerald-600 h-2 rounded-full"
-                    style={{ width: `${(module.performance.memory / 2048) * 100}%` }}
+                    style={{ width: `${(game.performance.memory / 2048) * 100}%` }}
                   ></div>
                 </div>
               </div>
@@ -130,11 +136,11 @@ export default function ModuleControl({ game, onClose }: ModuleControlProps) {
                   <Monitor className="w-5 h-5 text-blue-600" />
                   <span className="luxury-subheading">FPS</span>
                 </div>
-                <div className="luxury-metric-value">{module.performance.fps}</div>
+                <div className="luxury-metric-value">{game.performance.fps}</div>
                 <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
                   <div 
                     className="bg-gradient-to-r from-blue-500 to-cyan-600 h-2 rounded-full"
-                    style={{ width: `${(module.performance.fps / 144) * 100}%` }}
+                    style={{ width: `${(game.performance.fps / 144) * 100}%` }}
                   ></div>
                 </div>
               </div>
@@ -151,7 +157,7 @@ export default function ModuleControl({ game, onClose }: ModuleControlProps) {
                 <Clock className="w-5 h-5 text-purple-600" />
                 <span className="luxury-subheading">Last Update</span>
               </div>
-              <div className="luxury-text">{formatTime(module.lastUpdate)}</div>
+              <div className="luxury-text">{formatTime(new Date().toISOString())}</div>
             </div>
 
             <div className="luxury-card p-4">
@@ -168,12 +174,12 @@ export default function ModuleControl({ game, onClose }: ModuleControlProps) {
         <div className="flex space-x-4">
           <button 
             className={`luxury-button flex-1 ${
-              module.status === 'active' 
+              game.status === 'active' 
                 ? 'bg-gradient-to-r from-red-500 to-red-600' 
                 : 'bg-gradient-to-r from-green-500 to-green-600'
             }`}
           >
-            {module.status === 'active' ? (
+            {game.status === 'active' ? (
               <>
                 <Pause className="w-4 h-4 mr-2" />
                 Stop Module
@@ -195,14 +201,6 @@ export default function ModuleControl({ game, onClose }: ModuleControlProps) {
             <Settings className="w-4 h-4 mr-2" />
             Configure
           </button>
-          <div className="flex justify-between">
-            <span className="text-gamer-gray">Version:</span>
-            <span className="font-mono">1.0.0</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-gamer-gray">Last Updated:</span>
-            <span className="font-mono">{new Date().toLocaleDateString()}</span>
-          </div>
         </div>
       </div>
     </motion.div>
